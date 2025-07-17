@@ -7,4 +7,6 @@ export interface Hospital {
     lat: number
     lng: number
     phone?: string
+    services?: string[]
+    description?: string
 }

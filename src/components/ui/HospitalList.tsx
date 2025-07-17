@@ -1,31 +1,39 @@
-// components/HospitalCard.tsx
-import React from "react";
+import { useState } from 'react';
+import HospitalCard from '@/components/ui/HospitalCard';
+import ViewDetailsModal from '@/components/ui/ViewDetailsModal';
+import type { Hospital } from '@/types';
 
-type Hospital = {
-  id: string;
-  name: string;
-  address: string;
-  rating?: number;
-};
+const HospitalList = ({ hospitals }: { hospitals: Hospital[] }) => {
+  const [selectedHospital, setSelectedHospital] = useState<Hospital | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
-type Props = {
-  hospital: Hospital;
-  onClick: () => void;
-};
+  const handleClick = (hospital: Hospital) => {
+    setSelectedHospital(hospital);  // triggers fly-to
+    setShowModal(true);             // triggers modal
+  };
 
-const HospitalCard: React.FC<Props> = ({ hospital, onClick }) => {
   return (
-    <div
-      onClick={onClick}
-      className="cursor-pointer p-4 border rounded-xl shadow-md hover:shadow-lg transition-all mb-2 bg-white"
-    >
-      <h2 className="text-lg font-bold">{hospital.name}</h2>
-      <p className="text-sm text-gray-600">{hospital.address}</p>
-      {hospital.rating && (
-        <p className="text-xs text-yellow-500 mt-1">⭐ {hospital.rating}/5</p>
+    <div className="overflow-y-auto p-4 bg-white/80 backdrop-blur-md">
+      <h2 className="text-2xl font-semibold mb-4">Nearby Hospitals</h2>
+      
+      {hospitals.map((hospital, index) => (
+        <HospitalCard
+          key={index}
+          hospital={hospital}
+          selected={selectedHospital?.name === hospital.name}
+          onClick={() => handleClick(hospital)}  // now click does both things
+        />
+      ))}
+
+      {/* Modal */}
+      {showModal && selectedHospital && (
+        <ViewDetailsModal
+          hospital={selectedHospital}
+          onClose={() => setShowModal(false)}
+        />
       )}
     </div>
   );
 };
 
-export default HospitalCard;
+export default HospitalList;

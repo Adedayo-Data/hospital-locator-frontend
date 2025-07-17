@@ -7,6 +7,7 @@ import { dummyHospitals } from '@/data/DummyData';
 
 const ResultsScreen: React.FC = () => {
   const [selectedHospital, setSelectedHospital] = useState<Hospital | null>(null);
+  const [viewingDetails, setViewingDetails] = useState<boolean>(false);
 
   return (
     <div className="h-screen w-screen grid grid-cols-1 md:grid-cols-2">
