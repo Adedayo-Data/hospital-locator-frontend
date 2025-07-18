@@ -51,7 +51,10 @@ export default function Home() {
               {/* Action Buttons */}
               <div className="flex gap-4">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full">
+                  <Button 
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full"
+                  onClick={() => window.location.href = "/find-hospitals"} 
+                  >
                     Start Locating
                   </Button>
                 </motion.div>

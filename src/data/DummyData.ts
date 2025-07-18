@@ -1,12 +1,29 @@
 import { type Hospital } from "@/types";
+import heroImage from "@/assets/hero-image.jpg"
 
 export const dummyHospitals: Hospital[] = [
+  {
+    id: 5,
+    name: 'General Hospital Yaba',
+    location: 'Yaba, Lagos',
+    phone: '+2348001234567',
+    description: 'A leading general hospital in the Yaba area.',
+    image: '/images/yaba-hospital.jpg',
+    specialties: ['Pediatrics', 'Cardiology', 'Emergency'],
+    hours: 'Mon - Fri, 8am - 6pm',
+    emergency: true,
+    email: 'contact@yabahospital.ng',
+    website: 'https://yabahospital.ng',
+    rating: 4.5,
+    lat: 6.5244,
+    lng: 3.3602 
+  },
   {
     id: 1,
     name: "General Hospital Ikeja",
     location: "Ikeja, Lagos",
     rating: 4.7,
-    image: "https://images.unsplash.com/photo-1589758438368-7a1e5fbf7d84?fit=crop&w=600&q=80",
+    image: heroImage,
     lat: 6.6018,
     lng: 3.3515,
     phone: "+2348000000000"

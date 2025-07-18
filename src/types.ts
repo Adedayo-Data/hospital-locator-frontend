@@ -9,4 +9,9 @@ export interface Hospital {
     phone?: string
     services?: string[]
     description?: string
+    specialties?: string[]
+    hours?: string
+    emergency?: boolean
+    email?: string
+    website?: string
 }
