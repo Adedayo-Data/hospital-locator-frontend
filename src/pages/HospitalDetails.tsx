@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
-import { dummyHospitals } from '@/data/DummyData';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import MapView from '@/components/ui/MapView';
 import type { Hospital } from '@/types';
 import Navbar from '@/components/ui/Navbar';
@@ -11,7 +12,8 @@ import 'leaflet/dist/leaflet.css';
 
 const HospitalDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const hospital = dummyHospitals.find((h) => h.id === Number(id)) as Hospital | undefined;
+  const [hospital, setHospital] = useState<Hospital | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const {
     location: userLocation,
@@ -32,6 +34,22 @@ const HospitalDetail = () => {
     }
   };
 
+  useEffect(() => {
+    if (!id) return;
+
+    axios.get<Hospital>(`http://localhost:8080/api/hospital/${id}`)
+      .then((response) => {
+        setHospital(response.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Failed to load hospital:', err);
+        setHospital(null);
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) return <div className="text-center p-8 text-gray-600">Loading hospital info...</div>;
   if (!hospital) return <div className="text-center p-8 text-red-500">Hospital not found</div>;
 
   return (

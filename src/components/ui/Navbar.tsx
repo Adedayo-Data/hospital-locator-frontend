@@ -24,7 +24,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 md:px-10 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold text-green-700">
-          HospitalLocator
+          {/* HospitalLocator */}
+          MediMap
         </Link>
 
         {/* Nav Menu */}
