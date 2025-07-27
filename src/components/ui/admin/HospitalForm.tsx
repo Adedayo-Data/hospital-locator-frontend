@@ -35,6 +35,26 @@
     const [formData, setFormData] = useState<Hospital>(defaultHospital);
     const [isVisible, setIsVisible] = useState(false);
     const modalRef = useRef(null);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    
+    const uploadImageToCloudinary = async (file: File): Promise<string | null> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "medimap_upload");
+
+    try {
+        const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/drzcrx4he/image/upload",
+        formData
+        );
+        toast.success("Image uploaded successfully");
+        return res.data.secure_url; // to store in DB
+    } catch (err) {
+        console.error("Upload failed:", err);
+        toast.error("Image upload failed");
+        return null;
+    }
+    };
 
     useEffect(() => {
         setTimeout(() => setIsVisible(true), 10); // animation delay
@@ -141,6 +161,48 @@
                 value={formData.description ?? ''}
                 onChange={handleChange}
             />
+            <div className="mb-4">
+            <label className="block text-sm font-medium mb-1">Hospital Image</label>
+
+            {/* Hidden file input */}
+            <input
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                    const imageUrl = await uploadImageToCloudinary(file);
+                    if (imageUrl) {
+                    setFormData((prev) => ({ ...prev, image: imageUrl }));
+                    }
+                }
+                }}
+                ref={fileInputRef}
+                className="hidden"
+            />
+
+            {/* Visible upload button */}
+            <Button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                variant="outline"
+            >
+                Upload Image
+            </Button>
+
+            {/* Preview or filename */}
+            {formData.image && (
+                <div className="mt-2">
+                <img
+                    src={formData.image}
+                    alt="Preview"
+                    className="w-32 h-32 object-cover rounded"
+                />
+                </div>
+            )}
+            </div>
+
+
 
             <div className="flex items-center space-x-2">
                 <input
