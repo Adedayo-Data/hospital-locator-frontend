@@ -5,11 +5,16 @@ import HospitalForm from './HospitalForm';
 
 import { Button } from '@/components/ui/button';
 import type { Hospital } from '@/types';
+import toast, { Toaster } from 'react-hot-toast';
 
 const AdminPage: React.FC = () => {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingHospital, setEditingHospital] = useState<Hospital | null>(null);
+
+  const handleSuccess = () => {
+    fetchHospitals(); // refresh the list
+  };
 
   useEffect(() => {
     fetchHospitals();
@@ -36,16 +41,26 @@ const AdminPage: React.FC = () => {
     try {
       await axios.delete(`http://localhost:8080/api/hospital/${id}`);
       setHospitals(prev => prev.filter(h => h.id !== id));
+      toast.success("Hospital deleted successfully");
+      fetchHospitals(); // Refresh the list after deletion
     } catch (err) {
       console.error("Delete failed", err);
+      toast.error("Failed to delete hospital");
     }
   };
 
+//   const handleFormClose = () => {
+//     setShowForm(false);
+//     setEditingHospital(null);
+//     onSuccess={handleSuccess}; // Reset editing state
+//     setTimeout(() => setShowForm(false), 300); // Delay to allow animation
+//     fetchHospitals();
+//   };
   const handleFormClose = () => {
-    setShowForm(false);
-    setEditingHospital(null);
-    fetchHospitals();
-  };
+  setEditingHospital(null);
+  setTimeout(() => setShowForm(false), 300); // Optional delay for animation
+};
+
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-6">
@@ -69,6 +84,7 @@ const AdminPage: React.FC = () => {
         <HospitalForm
           onClose={handleFormClose}
           existing={editingHospital}
+          onSuccess={fetchHospitals} // Pass success callback
         />
       )}
     </div>

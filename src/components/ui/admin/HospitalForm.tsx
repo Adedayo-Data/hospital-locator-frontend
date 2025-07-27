@@ -1,73 +1,108 @@
-import React, { useState, useEffect } from 'react';
-import type { Hospital } from '@/types';
-import axios from 'axios';
-import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea'; // if using Shadcn's textarea
+    import React, { useState, useEffect, useRef } from 'react';
+    import type { Hospital } from '@/types';
+    import axios from 'axios';
+    import { X } from 'lucide-react';
+    import { Button } from '@/components/ui/button';
+    import { Input } from '@/components/ui/input';
+    import { Textarea } from '@/components/ui/textarea';
+    import toast from 'react-hot-toast';
 
-interface Props {
-  existing?: Hospital | null;
-  onClose: () => void;
-}
+    interface Props {
+    existing?: Hospital | null;
+    onClose: () => void;
+    onSuccess?: () => void; // Optional callback for success
+    }
 
-const defaultHospital: Hospital = {
-  id: 0,
-  name: '',
-  location: '',
-  rating: 0,
-  image: '',
-  lat: 0,
-  lng: 0,
-  phone: '',
-  services: [],
-  description: '',
-  specialties: [],
-  hours: '',
-  emergency: false,
-  email: '',
-  website: '',
-};
+    const defaultHospital: Hospital = {
+    id: 0,
+    name: '',
+    location: '',
+    rating: 0,
+    image: '',
+    lat: 0,
+    lng: 0,
+    phone: '',
+    services: [],
+    description: '',
+    specialties: [],
+    hours: '',
+    emergency: false,
+    email: '',
+    website: '',
+    };
 
-const HospitalForm: React.FC<Props> = ({ existing, onClose }) => {
-  const [formData, setFormData] = useState<Hospital>(defaultHospital);
+    const HospitalForm: React.FC<Props> = ({ existing, onClose, onSuccess }) => {
+    const [formData, setFormData] = useState<Hospital>(defaultHospital);
+    const [isVisible, setIsVisible] = useState(false);
+    const modalRef = useRef(null);
 
-  useEffect(() => {
+    useEffect(() => {
+        setTimeout(() => setIsVisible(true), 10); // animation delay
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+        if (modalRef.current && !(modalRef.current as any).contains(event.target)) {
+            onClose(); // close modal on outside click
+        }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [onClose]);
+
+    useEffect(() => {
     if (existing) {
-      setFormData(existing);
+        setFormData({
+        ...defaultHospital,
+        ...existing,
+        });
+    } else {
+        setFormData(defaultHospital); // Reset to blank form if creating new
     }
-  }, [existing]);
+    }, [existing]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: ['rating', 'lat', 'lng'].includes(name)
-        ? parseFloat(value)
-        : value,
-    }));
-  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      if (existing) {
-        await axios.put(`http://localhost:8080/api/hospitals/${existing.id}`, formData);
-      } else {
-        await axios.post('http://localhost:8080/api/hospitals', formData);
-      }
-      onClose();
-    } catch (err) {
-      console.error('Form submit failed', err);
-    }
-  };
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+        ...prev,
+        [name]: ['rating', 'lat', 'lng'].includes(name)
+            ? parseFloat(value)
+            : value,
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+        if (existing) {
+            await axios.put(`http://localhost:8080/api/hospital/${existing.id}`, formData);
+        } else {
+            await axios.post('http://localhost:8080/api/hospitals', formData);
+        }
+        toast.success(`Hospital ${existing ? "updated" : "created"} successfully!`);
+        onSuccess?.(); // Call success callback if provided
+        onClose();
+        } catch (err) {
+        console.error('Form submit failed', err);
+        }
+    };
 
   return (
     <div className="transition-all duration-300 ease-in-out">
         <div className="fixed inset-0 backdrop-blur-sm bg-white/10 flex items-center justify-center z-50">
         <div className="bg-white rounded-2xl p-8 w-[90vw] h-[90vh] max-w-5xl overflow-y-auto relative shadow-xl">
+            <div
+            ref={modalRef}
+            className={`bg-white rounded-2xl p-8 w-[90vw] h-[90vh] max-w-5xl overflow-y-auto relative shadow-xl transform transition-all duration-300 ${
+                isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+            }`}
+            >
             <button className="absolute top-4 right-4 text-gray-500" onClick={onClose}>
             <X size={20} />
             </button>
@@ -128,6 +163,7 @@ const HospitalForm: React.FC<Props> = ({ existing, onClose }) => {
         </div>
         </div>
     </div>    
+    </div>
   );
 };
 
