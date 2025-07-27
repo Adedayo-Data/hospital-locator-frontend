@@ -9,6 +9,7 @@ import { useUserLocation } from '@/hooks/useUserLocation';
 import { useRoute } from '@/hooks/useRoute';
 import { Polyline, MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import ReviewComponent from '@/components/ui/ReviewComponent';
 
 const HospitalDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -161,6 +162,7 @@ const HospitalDetail = () => {
               </button>
             </div>
           </div>
+          <ReviewComponent hospitalId={hospital.id} />
         </div>
       </div>
     </>
