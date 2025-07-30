@@ -1,40 +1,53 @@
 // src/context/AdminAuthContext.tsx
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
-interface AdminAuthContextType {
-  isAuthenticated: boolean;
-  login: () => void;
+interface AuthContextType {
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
-const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
+const AdminAuthContext = createContext<AuthContextType | null>(null);
+
+export const useAdminAuth = () => {
+  const context = useContext(AdminAuthContext);
+  if (!context) throw new Error("useAdminAuth must be used within AdminAuthProvider");
+  return context;
+};
 
 export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem("admin-auth") === "true";
-  });
+  const navigate = useNavigate();
 
-  const login = () => {
-    setIsAuthenticated(true);
-    localStorage.setItem("admin-auth", "true");
+  const login = async (email: string, password: string) => {
+    try {
+      const res = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.token) {
+        alert("Invalid login credentials");
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+      navigate("/admin"); // Redirect to dashboard
+    } catch (error) {
+      alert("Login failed");
+    }
   };
 
   const logout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem("admin-auth");
+    localStorage.removeItem("token");
+    navigate("/admin/login");
   };
 
   return (
-    <AdminAuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AdminAuthContext.Provider value={{ login, logout }}>
       {children}
     </AdminAuthContext.Provider>
   );
-};
-
-export const useAdminAuth = (): AdminAuthContextType => {
-  const context = useContext(AdminAuthContext);
-  if (!context) {
-    throw new Error("useAdminAuth must be used within an AdminAuthProvider");
-  }
-  return context;
 };

@@ -1,23 +1,33 @@
-import { BrowserRouter  as Router, Routes, Route} from "react-router-dom";
-import Home from "./pages/Home";
-import FindHospitals from "./pages/FindHospital";
-import HospitalDetail from "./pages/HospitalDetails";
-import AdminDashboard from "./pages/AdminDashboard";
+// src/App.tsx
+import { Routes, Route } from "react-router-dom";
+import AdminLogin from "@/pages/AdminLogin";
+import AdminDashboard from "@/pages/AdminDashboard";
 import HospitalManagement from "./components/ui/admin/HospitalManagement";
-import Toaster from 'react-hot-toast';
+import AdminPrivateRoute from "./components/ui/AdminPrivateRoute";
 
 export default function App() {
   return (
-    <Router>
-      <Toaster position="top-right" reverseOrder={false} />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/find-hospitals" element={<FindHospitals />} />
-        <Route path="/hospital/:id" element={<HospitalDetail />} />
-        <Route path="/admin/hospitals" element={<HospitalManagement />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+    <Routes>
+      {/* Public Route */}
+      <Route path="/admin/login" element={<AdminLogin />} />
 
-      </Routes>
-    </Router>
+      {/* Protected Admin Routes */}
+      <Route
+        path="/admin"
+        element={
+          <AdminPrivateRoute>
+            <AdminDashboard />
+          </AdminPrivateRoute>
+        }
+      />
+      <Route
+        path="/admin/hospitals"
+        element={
+          <AdminPrivateRoute>
+            <HospitalManagement />
+          </AdminPrivateRoute>
+        }
+      />
+    </Routes>
   );
 }
