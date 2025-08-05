@@ -1,5 +1,6 @@
 // src/App.tsx
 import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
 import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
 import HospitalManagement from "./components/ui/admin/HospitalManagement";
@@ -9,6 +10,7 @@ export default function App() {
   return (
     <Routes>
       {/* Public Route */}
+      <Route path = "/" element={<Home />} />
       <Route path="/admin/login" element={<AdminLogin />} />
 
       {/* Protected Admin Routes */}

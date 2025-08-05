@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children }) => {
     }
 
     // Check token validity with backend
-    fetch("http://localhost:8080/api/auth/validate-token", {
+    fetch("http://localhost:8080/API/auth/validate-token", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

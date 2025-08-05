@@ -20,7 +20,7 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const login = async (email: string, password: string) => {
     try {
-      const res = await fetch("http://localhost:8080/api/auth/login", {
+      const res = await fetch("http://localhost:8080/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
@@ -34,6 +34,7 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       }
 
       localStorage.setItem("token", data.token);
+      console.log("Token in localStorage from Login:", localStorage.getItem("token"));
       navigate("/admin"); // Redirect to dashboard
     } catch (error) {
       alert("Login failed");
