@@ -16,9 +16,9 @@ const AdminDashboard: React.FC = () => {
     const fetchStats = async () => {
       try {
         const [hRes, rRes, uRes] = await Promise.all([
-          axios.get("http://localhost:8080/api/hospitals/count"),
+          axios.get("http://localhost:8080/api/hospital/count"),
           axios.get("http://localhost:8080/api/reviews/count"),
-          axios.get("http://localhost:8080/api/users/count"),
+          axios.get("http://localhost:8080/auth/count"),
         ]);
 
         setStats({
