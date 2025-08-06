@@ -100,10 +100,23 @@
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+
+            const token = localStorage.getItem("token");
+
+            const config = {
+                headers: {
+                Authorization: `Bearer ${token}`,
+                },
+            };
+        
         if (existing) {
-            await axios.put(`http://localhost:8080/api/hospital/${existing.id}`, formData);
+            await axios.put(
+                `http://localhost:8080/api/hospital/${existing.id}`, 
+                formData,
+                config);
         } else {
-            await axios.post('http://localhost:8080/api/hospitals', formData);
+            await axios.post(
+                'http://localhost:8080/api/hospitals', formData);
         }
         toast.success(`Hospital ${existing ? "updated" : "created"} successfully!`);
         onSuccess?.(); // Call success callback if provided
