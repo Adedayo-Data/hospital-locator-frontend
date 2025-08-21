@@ -1,6 +1,6 @@
 export interface Hospital {
     id:number
-    name: string
+    hospitalName: string
     location: string
     rating: number
     image: string
@@ -10,7 +10,7 @@ export interface Hospital {
     services?: string[]
     description?: string
     specialties?: string[]
-    hours?: string
+    openingHours?: string
     emergency?: boolean
     email?: string
     website?: string
