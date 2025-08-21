@@ -15,7 +15,7 @@
 
     const defaultHospital: Hospital = {
     id: 0,
-    name: '',
+    hospitalName: '',
     location: '',
     rating: 0,
     image: '',
@@ -25,7 +25,7 @@
     services: [],
     description: '',
     specialties: [],
-    hours: '',
+    openingHours: '',
     emergency: false,
     email: '',
     website: '',
@@ -40,7 +40,7 @@
     const uploadImageToCloudinary = async (file: File): Promise<string | null> => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "medimap_upload");
+    formData.append("upload_preset", "medimap_uploads");
 
     try {
         const res = await axios.post(
@@ -116,7 +116,9 @@
                 config);
         } else {
             await axios.post(
-                'http://localhost:8080/api/hospitals', formData);
+                'http://localhost:8080/api/hospital', 
+                formData,
+                config);
         }
         toast.success(`Hospital ${existing ? "updated" : "created"} successfully!`);
         onSuccess?.(); // Call success callback if provided
@@ -142,7 +144,7 @@
             <h2 className="text-2xl font-semibold mb-4">{existing ? 'Edit' : 'Add'} Hospital</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
 
-            <Input name="name" placeholder="Hospital Name" value={formData.name} onChange={handleChange} />
+            <Input name="name" placeholder="Hospital Name" value={formData.hospitalName} onChange={handleChange} />
             <Input name="location" placeholder="Location" value={formData.location} onChange={handleChange} />
             <Input name="rating" type="number" placeholder="Rating" value={formData.rating} onChange={handleChange} />
             <Input name="lat" type="number" placeholder="Latitude" value={formData.lat} onChange={handleChange} />
@@ -166,7 +168,7 @@
                 setFormData({ ...formData, specialties: e.target.value.split(',').map(s => s.trim()) })
                 }
             />
-            <Input name="hours" placeholder="Operating Hours" value={formData.hours ?? ''} onChange={handleChange} />
+            <Input name="hours" placeholder="Operating Hours" value={formData.openingHours ?? ''} onChange={handleChange} />
 
             <Textarea
                 name="description"

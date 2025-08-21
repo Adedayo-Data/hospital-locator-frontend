@@ -40,7 +40,13 @@ const HospitalManagement: React.FC = () => {
     if (!confirm) return;
 
     try {
-      await axios.delete(`http://localhost:8080/api/hospital/${id}`);
+        const token = localStorage.getItem("token");
+        const config = {
+            headers: {
+            Authorization: `Bearer ${token}`,
+            },
+        };
+      await axios.delete(`http://localhost:8080/api/hospital/${id}`, config);
       setHospitals(prev => prev.filter(h => h.id !== id));
       toast.success("Hospital deleted successfully");
       fetchHospitals(); // Refresh the list after deletion
