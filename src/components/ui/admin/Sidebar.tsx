@@ -21,12 +21,12 @@ const Sidebar = () => {
           <Link to="/admin/hospitals" className="flex items-center gap-2 text-gray-700 hover:text-blue-600">
             <Home className="w-5 h-5" /> Manage Hospitals
           </Link>
-          <Link to="/admin/manage-users" className="flex items-center gap-2 text-gray-700 hover:text-blue-600">
+          {/* <Link to="/admin/manage-users" className="flex items-center gap-2 text-gray-700 hover:text-blue-600">
             <Home className="w-5 h-5" /> Manage Users
           </Link>
           <Link to="/admin/manage-reviews" className="flex items-center gap-2 text-gray-700 hover:text-blue-600">
             <Home className="w-5 h-5" /> Manage Reviews
-          </Link>
+          </Link> */}
           <Link to="/admin/settings" className="flex items-center gap-2 text-gray-700 hover:text-blue-600">
             <Settings className="w-5 h-5" /> Settings
           </Link>
