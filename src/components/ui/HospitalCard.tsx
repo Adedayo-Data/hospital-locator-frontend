@@ -24,7 +24,7 @@ const HospitalCard: React.FC<HospitalCardProps> = ({ hospital, selected, onClick
         selected ? 'border-blue-500 bg-blue-100' : 'border-transparent bg-white'
       }`}
     >
-      <h3 className="text-lg font-bold">{hospital.name}</h3>
+      <h3 className="text-lg font-bold">{hospital.hospitalName}</h3>
       <p className="text-sm text-gray-600">{hospital.location}</p>
 
       <div className="mt-3 flex items-center gap-2">

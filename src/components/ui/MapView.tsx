@@ -60,7 +60,7 @@ const MapView: React.FC<Props> = ({ hospitals, selectedHospital, userLocation })
           position={[hospital.lat, hospital.lng]}
         >
           <Popup>
-            <strong>{hospital.name}</strong><br />
+            <strong>{hospital.hospitalName}</strong><br />
             {hospital.location}
           </Popup>
         </Marker>

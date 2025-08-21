@@ -35,12 +35,12 @@ export default function FeaturedHospitals() {
           >
             <img
               src={hospital.image || "/placeholder.jpg"}
-              alt={hospital.name}
+              alt={hospital.hospitalName}
               className="w-full h-40 object-cover"
             />
 
             <div className="p-4 flex flex-col flex-grow">
-              <h3 className="text-lg font-semibold text-green-800">{hospital.name}</h3>
+              <h3 className="text-lg font-semibold text-green-800">{hospital.hospitalName}</h3>
               <p className="text-sm text-gray-600 mb-2">{hospital.location}</p>
 
               <div className="flex items-center gap-1 text-yellow-500 mb-4">

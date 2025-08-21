@@ -1,14 +1,23 @@
-import { useState } from "react"
-import { Search } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState, type FormEvent } from "react";
+import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export default function SearchBar() {
-  const [query, setQuery] = useState("")
+interface SearchBarProps {
+  onSearch: (query: string) => void;
+  initialQuery?: string;
+}
 
-  const handleSearch = () => {
-    // For now, just log it. Later we'll route to search or update map.
-    console.log("Searching for:", query)
-  }
+export default function SearchBar({ onSearch, initialQuery = "" }: SearchBarProps) {
+  const [query, setQuery] = useState(initialQuery);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!query.trim()) return;
+    setLoading(true);
+    onSearch(query);
+    // The parent component will handle the loading state reset
+  };
 
   return (
     <section className="bg-white py-10 px-4 md:px-10">
@@ -20,23 +29,28 @@ export default function SearchBar() {
           Enter a hospital name, city, or location to begin.
         </p>
 
-        <div className="flex items-center gap-2 bg-white p-2 rounded-full shadow-md max-w-xl mx-auto border border-gray-200">
+        <form
+          onSubmit={handleSubmit}
+          className="flex items-center gap-2 bg-white p-2 rounded-full shadow-md max-w-xl mx-auto border border-gray-200"
+        >
           <Search className="text-green-600 ml-3" />
           <input
             type="text"
             placeholder="Search by hospital or location..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-1 p-3 rounded-full focus:outline-none text-sm"
+            className="flex-1 p-2 bg-transparent focus:outline-none text-sm"
+            disabled={loading}
           />
           <Button
-            className="bg-green-600 text-white rounded-full px-6 py-2 hover:bg-green-700"
-            onClick={handleSearch}
+            type="submit"
+            className="bg-green-600 text-white rounded-full px-6 py-2 hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed"
+            disabled={loading}
           >
-            Search
+            {loading ? "Searching..." : "Search"}
           </Button>
-        </div>
+        </form>
       </div>
     </section>
-  )
+  );
 }

@@ -1,24 +1,27 @@
 // components/ui/SearchScreen.tsx
-import React from "react";
-import MapView from "./MapView";
+import React, { useState } from 'react';
+import MapView from './MapView';
+import type { Hospital } from '@/types';
 
-const dummyHospitals = [
+const dummyHospitals: Hospital[] = [
   {
     id: 1,
-    name: "General Hospital Ikeja",
-    location: "Ikeja, Lagos",
+    hospitalName: 'General Hospital Ikeja',
+    location: 'Ikeja, Lagos',
     rating: 4.7,
-    image: "https://images.unsplash.com/photo-1589758438368-7a1e5fbf7d84?fit=crop&w=600&q=80",
+    image: 'https://images.unsplash.com/photo-1589758438368-7a1e5fbf7d84?fit=crop&w=600&q=80',
     lat: 6.6018,
-    lng: 3.3515
+    lng: 3.3515,
   },
 ];
 
 type Props = {
-  onSearch: () => void;
+  onSearch: (query: string) => void;
 };
 
 const SearchScreen: React.FC<Props> = ({ onSearch }) => {
+  const [query, setQuery] = useState('');
+
   return (
     <div className="relative h-full w-full">
       {/* Blurred Map in Background */}
@@ -38,10 +41,13 @@ const SearchScreen: React.FC<Props> = ({ onSearch }) => {
             type="text"
             placeholder="Enter hospital name or location"
             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && onSearch(query)}
           />
           <button
             className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-            onClick={onSearch}
+            onClick={() => onSearch(query)}
           >
             Search
           </button>
