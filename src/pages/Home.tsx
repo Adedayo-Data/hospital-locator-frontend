@@ -1,13 +1,20 @@
-import heroImage from "@/assets/hero-image.jpg"
-import { Button } from "@/components/ui/button"
-import { motion } from "framer-motion"
-import Navbar from "@/components/ui/Navbar"
-import SearchBar from "@/components/ui/SearchBar"
-import MiniMapPreview from "@/components/ui/MiniMapPreview"
-import FeaturedHospitals from "@/components/ui/FeaturedHospitals"
-import CallToAction from "@/components/ui/CallToAction"
+import heroImage from "@/assets/hero-image.jpg";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import Navbar from "@/components/ui/Navbar";
+import SearchBar from "@/components/ui/SearchBar";
+import MiniMapPreview from "@/components/ui/MiniMapPreview";
+import FeaturedHospitals from "@/components/ui/FeaturedHospitals";
+import CallToAction from "@/components/ui/CallToAction";
 
 export default function Home() {
+  const navigate = useNavigate();
+
+  const handleSearch = (query: string) => {
+    navigate(`/find-hospitals?query=${encodeURIComponent(query)}`);
+  };
+
   return (
     <>
       <Navbar />
@@ -53,7 +60,7 @@ export default function Home() {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button 
                   className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full"
-                  onClick={() => window.location.href = "/find-hospitals"} 
+                  onClick={() => navigate("/find-hospitals")} 
                   >
                     Start Locating
                   </Button>
@@ -98,18 +105,18 @@ export default function Home() {
         </section>
 
         {/* Search Bar Section */}
-        <SearchBar />
+        <SearchBar onSearch={handleSearch} />
         <MiniMapPreview />
         <FeaturedHospitals />
         <CallToAction />
       </div>
     </>
-  )
+  );
 }
 
 interface StatProps {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
 
 function StatItem({ value, label }: StatProps) {
@@ -118,5 +125,5 @@ function StatItem({ value, label }: StatProps) {
       <div className="text-2xl font-bold text-green-700">{value}</div>
       <div className="text-gray-600 text-sm">{label}</div>
     </div>
-  )
+  );
 }
